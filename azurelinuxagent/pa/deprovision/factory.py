@@ -1,4 +1,6 @@
 # Copyright 2018 Microsoft Corporation
+# Copyright (c) 2016, 2017 by Delphix. All rights reserved.
+# Copyright 2019 Joyent, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,6 +25,7 @@ from .arch import ArchDeprovisionHandler
 from .clearlinux import ClearLinuxDeprovisionHandler
 from .coreos import CoreOSDeprovisionHandler
 from .ubuntu import UbuntuDeprovisionHandler, Ubuntu1804DeprovisionHandler
+from .illumos import illumosDeprovisionHandler
 
 
 from distutils.version import LooseVersion as Version
@@ -42,6 +45,8 @@ def get_deprovision_handler(distro_name=DISTRO_NAME,
         return CoreOSDeprovisionHandler()
     if "Clear Linux" in distro_full_name:
         return ClearLinuxDeprovisionHandler()
+    if distro_name == "illumos":
+        return illumosDeprovisionHandler()
 
     return DeprovisionHandler()
 

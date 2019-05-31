@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE service_bundle SYSTEM "/usr/share/lib/xml/dtd/service_bundle.dtd.1">
+<!--
+  Copyright (c) 2016, 2017 by Delphix. All rights reserved.
+-->
+
+<service_bundle type='manifest' name='Azure Linux Agent'>
+
+<service
+	name='system/virtualization/waagent'
+	type='service'
+	version='1'>
+
+	<create_default_instance enabled='false' />
+	<single_instance />
+
+	<dependency name='network'
+		grouping='require_any'
+		restart_on='error'
+		type='service'>
+		<service_fmri value='svc:/milestone/network' />
+	</dependency>
+
+	<exec_method
+		type='method'
+		name='start'
+		exec='/opt/azure/sbin/waagent start'
+		timeout_seconds='60' />
+
+	<exec_method
+		type='method'
+		name='stop'
+		exec=':kill'
+		timeout_seconds='60' />
+
+	<template>
+		<common_name>
+			<loctext xml:lang='C'>
+				Azure Linux Agent
+			</loctext>
+		</common_name>
+	</template>
+</service>
+
+</service_bundle>

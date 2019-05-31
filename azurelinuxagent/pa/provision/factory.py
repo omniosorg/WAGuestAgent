@@ -1,4 +1,6 @@
 # Copyright 2018 Microsoft Corporation
+# Copyright (c) 2016, 2017 by Delphix. All rights reserved.
+# Copyright 2019 Joyent, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,10 +24,14 @@ from azurelinuxagent.common.version import DISTRO_NAME, DISTRO_VERSION, \
 
 from .default import ProvisionHandler
 from .cloudinit import CloudInitProvisionHandler
+from .illumos import illumosProvisionHandler
 
 def get_provision_handler(distro_name=DISTRO_NAME, 
                             distro_version=DISTRO_VERSION,
                             distro_full_name=DISTRO_FULL_NAME):
+
+    if distro_name == "illumos":
+        return illumosProvisionHandler();
 
     if conf.get_provision_cloudinit():
         return CloudInitProvisionHandler()
