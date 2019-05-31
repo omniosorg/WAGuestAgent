@@ -1,4 +1,6 @@
 # Copyright 2018 Microsoft Corporation
+# Copyright (c) 2016 by Delphix. All rights reserved.
+# Copyright 2019 Joyent, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,6 +37,7 @@ from .gaia import GaiaOSUtil
 from .iosxe import IosxeOSUtil
 from .nsbsd import NSBSDOSUtil
 from .openwrt import OpenWRTOSUtil
+from .illumos import illumosOSUtil
 
 from distutils.version import LooseVersion as Version
 
@@ -126,6 +129,9 @@ def _get_osutil(distro_name, distro_code_name, distro_version, distro_full_name)
 
     if distro_name == "openwrt":
         return OpenWRTOSUtil()
+
+    elif distro_name == "illumos":
+        return illumosOSUtil()
 
     else:
         logger.warn("Unable to load distro implementation for {0}. Using "

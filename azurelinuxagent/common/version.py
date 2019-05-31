@@ -1,4 +1,6 @@
 # Copyright 2019 Microsoft Corporation
+# Copyright (c) 2016, 2017 by Delphix. All rights reserved.
+# Copyright 2019 Joyent, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,6 +24,7 @@ import sys
 
 import azurelinuxagent.common.conf as conf
 import azurelinuxagent.common.utils.fileutil as fileutil
+import azurelinuxagent.common.utils.shellutil as shellutil
 from azurelinuxagent.common.utils.flexible_version import FlexibleVersion
 from azurelinuxagent.common.future import ustr, get_linux_distribution
 
@@ -85,6 +88,18 @@ def get_distro():
     elif 'NS-BSD' in platform.system():
         release = re.sub('\-.*\Z', '', ustr(platform.release()))
         osinfo = ['nsbsd', release, '', 'nsbsd']
+    elif 'SunOS' in platform.system():
+        release = platform.release()
+        # SunOS can be illumos or Oracle Solaris.  Use `uname -o` to confirm
+        # illumos.
+        if 'illumos' in shellutil.run_get_output("uname -o")[1]:
+            # /etc/release has the illumos distro in its first word
+            # (e.g. "OmniOS", "OpenIndiana", "SmartOS")
+            # If we need to get more specific, do that here.
+            # But for now, just trust platform.release()
+            osinfo = ['illumos', release, '', 'illumos']
+        else:
+            osinfo = ['solaris', release, '', 'solaris']
     else:
         try:
             # dist() removed in Python 3.7

@@ -1,4 +1,6 @@
 # Copyright 2018 Microsoft Corporation
+# Copyright (c) 2016, 2017 by Delphix. All rights reserved.
+# Copyright 2019 Joyent, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,6 +24,7 @@ from .default import ResourceDiskHandler
 from .freebsd import FreeBSDResourceDiskHandler
 from .openbsd import OpenBSDResourceDiskHandler
 from .openwrt import OpenWRTResourceDiskHandler
+from .illumos import illumosResourceDiskHandler
 
 from distutils.version import LooseVersion as Version
 
@@ -37,6 +40,9 @@ def get_resourcedisk_handler(distro_name=DISTRO_NAME,
 
     if distro_name == "openwrt":
         return OpenWRTResourceDiskHandler()
+
+    if distro_name == "illumos":
+        return illumosResourceDiskHandler()
 
     return ResourceDiskHandler()
 
