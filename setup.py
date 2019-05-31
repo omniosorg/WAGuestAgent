@@ -3,6 +3,7 @@
 # Microsoft Azure Linux Agent setup.py
 #
 # Copyright 2013 Microsoft Corporation
+# Copyright 2019 Joyent, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -167,6 +168,11 @@ def get_data_files(name, version, fullname):  # pylint: disable=R0912
     elif name == 'openbsd':
         set_conf_files(data_files, src=["config/openbsd/waagent.conf"])
         set_openbsd_rc_files(data_files)
+    elif name == 'illumos':
+        set_bin_files(data_files, dest="/opt/azure/sbin")
+        set_conf_files(data_files, src=["config/illumos/waagent.conf"])
+        set_files(data_files, dest="/lib/svc/manifest/system",
+                src=["init/illumos/waagent.xml"])
     elif name == 'debian':
         set_conf_files(data_files, src=["config/debian/waagent.conf"])
         set_logrotate_files(data_files)

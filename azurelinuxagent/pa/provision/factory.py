@@ -1,4 +1,6 @@
 # Copyright 2018 Microsoft Corporation
+# Copyright (c) 2016, 2017 by Delphix. All rights reserved.
+# Copyright 2019 Joyent, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,10 +24,14 @@ from azurelinuxagent.common.version import DISTRO_NAME, DISTRO_VERSION, \
 
 from .default import ProvisionHandler
 from .cloudinit import CloudInitProvisionHandler, cloud_init_is_enabled
+from .illumos import illumosProvisionHandler
 
 def get_provision_handler(distro_name=DISTRO_NAME,  # pylint: disable=W0613
                             distro_version=DISTRO_VERSION,  # pylint: disable=W0613
                             distro_full_name=DISTRO_FULL_NAME):  # pylint: disable=W0613
+
+    if distro_name == "illumos":
+        return illumosProvisionHandler();
 
     provisioning_agent = conf.get_provisioning_agent()
 
@@ -33,6 +39,7 @@ def get_provision_handler(distro_name=DISTRO_NAME,  # pylint: disable=W0613
             provisioning_agent == 'auto' and
             cloud_init_is_enabled()):
         logger.info('Using cloud-init for provisioning')
+
         return CloudInitProvisionHandler()
 
     logger.info('Using waagent for provisioning')
