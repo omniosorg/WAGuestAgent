@@ -80,13 +80,10 @@ class illumosOSUtil(DefaultOSUtil):
         #
         fileutil.write_file('/etc/nodename', '{0}\n'.format(hostname))
 
-        ret = shellutil.run('svccfg -s svc:/system/identity:node setprop config/local_override = true')
+        # Make it happen NOW.
+        ret = shellutil.run('uname -S {0}'.format(hostname))
         if ret:
-            raise OSUtilError('Unable to set property of "svc:/system/identity:node" service.')
-
-        ret = shellutil.run('svcadm refresh svc:/system/identity:node')
-        if ret:
-            raise OSUtilError('Unable to refresh "svc:/system/identity:node" service.')
+            raise OSUtilError('Unable to set hostname to {0}.'.format(hostname))
 
         #
         # Unfortunately, there isn't a way to cause the service refresh
