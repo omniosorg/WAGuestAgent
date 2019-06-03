@@ -4,7 +4,7 @@
   Copyright (c) 2016, 2017 by Delphix. All rights reserved.
 -->
 
-<service_bundle type='manifest' name='Azure Linux Agent'>
+<service_bundle type='manifest' name='Azure Guest Agent'>
 
 <service
 	name='system/virtualization/waagent'
@@ -19,6 +19,13 @@
 		restart_on='error'
 		type='service'>
 		<service_fmri value='svc:/milestone/network' />
+	</dependency>
+
+	<dependency name='rmvolmgr'
+		grouping='require_any'
+		restart_on='error'
+		type='service'>
+		<service_fmri value='svc:/system/filesystem/rmvolmgr' />
 	</dependency>
 
 	<exec_method
@@ -36,7 +43,7 @@
 	<template>
 		<common_name>
 			<loctext xml:lang='C'>
-				Azure Linux Agent
+				Azure Guest Agent
 			</loctext>
 		</common_name>
 	</template>
