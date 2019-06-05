@@ -31,7 +31,7 @@
 	<exec_method
 		type='method'
 		name='start'
-		exec='/opt/azure/sbin/waagent start'
+		exec='/usr/lib/hyperv/waagent %m'
 		timeout_seconds='60' />
 
 	<exec_method
