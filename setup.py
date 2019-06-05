@@ -169,7 +169,7 @@ def get_data_files(name, version, fullname):  # pylint: disable=R0912
         set_conf_files(data_files, src=["config/openbsd/waagent.conf"])
         set_openbsd_rc_files(data_files)
     elif name == 'illumos':
-        set_bin_files(data_files, dest="/opt/azure/sbin")
+        set_bin_files(data_files, dest="/usr/lib/hyperv")
         set_conf_files(data_files, src=["config/illumos/waagent.conf"])
         set_files(data_files, dest="/lib/svc/manifest/system",
                 src=["init/illumos/waagent.xml"])
