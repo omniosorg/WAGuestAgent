@@ -235,8 +235,6 @@ class illumosOSUtil(DefaultOSUtil):
 
     def set_scsi_disks_timeout(self, timeout):
         pattern = r'^set sd:sd_io_time = (.*)$'
-        if not os.path.isfile('/etc/system'):
-            raise OSUtilError('file "/etc/system" not found, unable to set SCSI disks timeout.')
 
         #
         # Since changes to this setting require a reboot to take effect,
@@ -248,23 +246,24 @@ class illumosOSUtil(DefaultOSUtil):
         # suggest rebooting the system when that's not actually necessary.
         #
 
-        match = fileutil.findstr_in_file('/etc/system', pattern)
-        if match:
-            logger.info('Found existing SCSI disk timeout setting: "{0}".'.format(match.group(0)))
+        for sf in ['/etc/system', '/etc/system.d/.self-assembly']:
+                if not os.path.isfile(sf): continue
+                match = fileutil.findstr_in_file(sf, pattern)
+                if match:
+                    logger.info('Found existing SCSI disk timeout setting: "{0}".'.format(match.group(0)))
 
-            try:
-                current = int(match.group(1))
-            except ValueError:
-                raise OSUtilError('Unable to parse existing SCSI disk timeout: "{0}".'.format(match.group(1)))
+                    try:
+                        current = int(match.group(1))
+                    except ValueError:
+                        raise OSUtilError('Unable to parse existing SCSI disk timeout: "{0}".'.format(match.group(1)))
 
-            if current == int(timeout):
-                logger.info('Current SCSI disk timeout matches desired SCSI disk timeout, skipping.')
-                return
+                    if current == int(timeout):
+                        logger.info('Current SCSI disk timeout matches desired SCSI disk timeout, skipping.')
+                        return
 
         logger.warn('Updating SCSI disk timeout to desired value of "{0}", reboot required to take effect.'.format(timeout))
-        fileutil.update_conf_file('/etc/system',
-                                  'set sd:sd_io_time',
-                                  'set sd:sd_io_time = {0}\n'.format(timeout))
+        fileutil.write_file('/etc/system.d/system:virtualization:azure-agent',
+            'set sd:sd_io_time = {0}\n'.format(timeout))
 
     def check_pid_alive(self, pid):
         return shellutil.run("ps -p {0}".format(pid), chk_err=False) == 0
