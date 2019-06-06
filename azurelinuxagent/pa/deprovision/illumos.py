@@ -37,6 +37,7 @@ class illumosDeprovisionHandler(DeprovisionHandler):
         #
         warnings.append("WARNING! The illumos Management service will be stopped.")
         actions.append(DeprovisionAction(self.osutil.stop_mgmt_service))
+        actions.append(DeprovisionAction(self.osutil.clear_ips_uuid))
 
         files_to_del = [
             #

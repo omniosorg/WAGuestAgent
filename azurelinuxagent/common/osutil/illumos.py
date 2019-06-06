@@ -53,6 +53,10 @@ class illumosOSUtil(DefaultOSUtil):
     def del_root_password(self):
         logger.error('"del_root_password" not supported.')
 
+    def clear_ips_uuid(self):
+        if not os.path.isfile('/var/pkg/pkg5.image'): return
+        fileutil.update_conf_file("/var/pkg/pkg5.image", "last_uuid", "")
+
     def stop_mgmt_service(self):
         logger.error('"stop_mgmt_service" not supported.')
 
