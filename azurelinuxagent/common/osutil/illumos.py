@@ -238,7 +238,7 @@ class illumosOSUtil(DefaultOSUtil):
         return ret[1] if ret[0] == 0 else None
 
     def set_scsi_disks_timeout(self, timeout):
-        pattern = r'^set sd:sd_io_time = (.*)$'
+        pattern = r'^set sd:sd_io_time *= *(.*)$'
 
         #
         # Since changes to this setting require a reboot to take effect,
