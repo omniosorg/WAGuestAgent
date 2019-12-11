@@ -270,6 +270,11 @@ class illumosOSUtil(DefaultOSUtil):
         return shellutil.run("ps -p {0}".format(pid), chk_err=False) == 0
 
     @staticmethod
+    def read_route_table():
+        # Not currently implemented for illumos
+        return []
+
+    @staticmethod
     def _get_net_info():
         iface = ''
         inet = ''
