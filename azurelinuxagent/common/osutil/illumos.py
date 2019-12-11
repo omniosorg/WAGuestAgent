@@ -252,17 +252,14 @@ class illumosOSUtil(DefaultOSUtil):
 
         for sf in ['/etc/system', '/etc/system.d/.self-assembly']:
                 if not os.path.isfile(sf): continue
-                match = fileutil.findstr_in_file(sf, pattern)
+                match = fileutil.findre_in_file(sf, pattern)
                 if match:
-                    logger.info('Found existing SCSI disk timeout setting: "{0}".'.format(match.group(0)))
-
                     try:
                         current = int(match.group(1))
                     except ValueError:
                         raise OSUtilError('Unable to parse existing SCSI disk timeout: "{0}".'.format(match.group(1)))
 
                     if current == int(timeout):
-                        logger.info('Current SCSI disk timeout matches desired SCSI disk timeout, skipping.')
                         return
 
         logger.warn('Updating SCSI disk timeout to desired value of "{0}", reboot required to take effect.'.format(timeout))
