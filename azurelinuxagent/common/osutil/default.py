@@ -602,7 +602,7 @@ class DefaultOSUtil(object):
         raise OSUtilError(msg="Failed to get dvd device from {0}".format(dev_dir),
                           inner=inner_detail)
     def get_dvd_mount_options(self):
-        return "-o ro -t udf,iso9660,vfat"
+        return ["-o", "ro", "-t", "udf,iso9660,vfat"]
 
     def mount_dvd(self,
                   max_retry=6,

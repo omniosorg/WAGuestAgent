@@ -185,7 +185,7 @@ class illumosOSUtil(DefaultOSUtil):
         return False
 
     def get_dvd_mount_options(self):
-        return "-o ro -F udfs"
+        return ['-o', 'ro', '-F', 'udfs']
 
     def get_dvd_device(self, dev_dir='/dev'):
         cmd = "rmformat -l | grep 'Logical Node' | awk '{print $NF}' | sed -e 's/rdsk/dsk/'"
