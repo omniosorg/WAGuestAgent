@@ -114,6 +114,14 @@ def get_distro():
     elif 'NS-BSD' in platform.system():
         release = re.sub('\-.*\Z', '', ustr(platform.release()))  # pylint: disable=W1401
         osinfo = ['nsbsd', release, '', 'nsbsd']
+    elif 'SunOS' in platform.system():
+        release = platform.release()
+        # SunOS can be illumos or Oracle Solaris.  Use `uname -o` to confirm
+        # illumos.
+        if 'illumos' in shellutil.run_get_output("uname -o")[1]:
+            osinfo = ['illumos', release, '', 'illumos']
+        else:
+            osinfo = ['solaris', release, '', 'solaris']
     else:
         try:
             # dist() removed in Python 3.8

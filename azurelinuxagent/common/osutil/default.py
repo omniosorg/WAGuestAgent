@@ -601,6 +601,9 @@ class DefaultOSUtil(object):
         raise OSUtilError(msg="Failed to get dvd device from {0}".format(dev_dir),
                           inner=inner_detail)
 
+    def get_dvd_mount_options(self):
+        return ["-o", "ro", "-t", "udf,iso9660,vfat"]
+
     def mount_dvd(self,
                   max_retry=6,
                   chk_err=True,
@@ -626,7 +629,7 @@ class DefaultOSUtil(object):
         for retry in range(1, max_retry):
             return_code, err = self.mount(dvd_device,
                                           mount_point,
-                                          option=["-o", "ro", "-t", "udf,iso9660,vfat"],
+                                          option=self.get_dvd_mount_options(),
                                           chk_err=False)
             if return_code == 0:
                 logger.info("Successfully mounted dvd")
@@ -1117,6 +1120,15 @@ class DefaultOSUtil(object):
 
     def restart_ssh_service(self):
         pass
+
+    def enable_serial_console(self):
+        pass
+
+    def reboot_system(self):
+        logger.info('Rebooting system')
+        ret = shellutil.run('shutdown -r now')
+        if ret != 0:
+            logger.error('Failed to reboot the system')
 
     def route_add(self, net, mask, gateway):  # pylint: disable=W0613
         """

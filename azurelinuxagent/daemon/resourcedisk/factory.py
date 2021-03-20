@@ -20,6 +20,7 @@ from .default import ResourceDiskHandler
 from .freebsd import FreeBSDResourceDiskHandler
 from .openbsd import OpenBSDResourceDiskHandler
 from .openwrt import OpenWRTResourceDiskHandler
+from .illumos import illumosResourceDiskHandler
 
 
 def get_resourcedisk_handler(distro_name=DISTRO_NAME, 
@@ -33,6 +34,9 @@ def get_resourcedisk_handler(distro_name=DISTRO_NAME,
 
     if distro_name == "openwrt":
         return OpenWRTResourceDiskHandler()
+
+    if distrib_name == "illumos":
+        return illumosResourceDiskHandler()
 
     return ResourceDiskHandler()
 

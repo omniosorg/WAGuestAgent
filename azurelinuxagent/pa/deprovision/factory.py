@@ -23,6 +23,7 @@ from .clearlinux import ClearLinuxDeprovisionHandler
 from .coreos import CoreOSDeprovisionHandler
 from .default import DeprovisionHandler
 from .ubuntu import UbuntuDeprovisionHandler, Ubuntu1804DeprovisionHandler
+from .illumos import illumosDeprovisionHandler
 
 
 def get_deprovision_handler(distro_name=DISTRO_NAME, 
@@ -39,6 +40,9 @@ def get_deprovision_handler(distro_name=DISTRO_NAME,
         return CoreOSDeprovisionHandler()
     if "Clear Linux" in distro_full_name:
         return ClearLinuxDeprovisionHandler()  # pylint: disable=E1120
+
+    if distro_name == "illumos":
+        return illumosDeprovisionHandler()
 
     return DeprovisionHandler()
 
