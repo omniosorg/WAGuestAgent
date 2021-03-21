@@ -28,5 +28,3 @@ class illumosProvisionHandler(ProvisionHandler):
     def __init__(self):
         super(illumosProvisionHandler, self).__init__()
 
-    def config_user_account(self, ovfenv):
-        logger.info('"config_user_account" not supported.')

@@ -61,10 +61,12 @@ class illumosDeprovisionHandler(DeprovisionHandler):
             #
             # Remove history of previously run Bash commands.
             #
-            '/root/.bash_history'
+            '/root/.bash_history',
             #
-            # XXX KEBE ASKS --> more?!?  SSH keys?
+            # SSH keys
             #
+            '/etc/ssh/ssh_host*',
+            '/root/.ssh/*',
         ]
 
         for f in files_to_del:

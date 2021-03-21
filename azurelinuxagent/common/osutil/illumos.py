@@ -38,14 +38,26 @@ class illumosOSUtil(DefaultOSUtil):
     # settings, or code changes to other parts of the codebase.
     #
 
-    def useradd(self, username, expiration=None):
-        logger.error('"useradd" not supported.')
+    def useradd(self, username, expiration=None, comment=None):
+        userentry = self.get_userentry(username)
+        if userentry is not None:
+            logger.warn("User {0} already exists, skip useradd", username)
+            return
+
+        cmd = ['useradd', '-mz']
+        if expiration is not None:
+            cmd.extend(['-e', expiration])
+        if comment is not None:
+            cmd.extend(['-c', comment])
+        cmd.append(username)
+
+        self._run_command_raising_OSUtilError(cmd,
+            err_msg="Failed to create user account:{0}".format(username))
+
+        self._run_command_without_raising(['passwd', '-N', username])
 
     def chpasswd(self, username, password, crypt_id=6, salt_len=10):
         logger.error('"chpasswd" not supported.')
-
-    def conf_sudoer(self, username, nopasswd=False, remove=False):
-        logger.error('"conf_sudoer" not supported.')
 
     def conf_sshd(self, disable_password):
         logger.error('"conf_sshd" not supported.')
@@ -172,14 +184,11 @@ class illumosOSUtil(DefaultOSUtil):
         else:
             return None
 
-    def is_sys_user(self, username):
-        logger.warn('"is_sys_user" not supported.')
-
     def del_account(self, username):
-        logger.warn('"del_account" not supported.')
-
-    def deploy_ssh_pubkey(self, username, pubkey):
-        logger.warn('"deploy_ssh_pubkey" not supported.')
+        if self.is_sys_user(username):
+            logger.error("{0} is a system user. Will not delete it.", username)
+        self._run_command_without_raising(['userdel', '-r', username])
+        self.conf_sudoer(username, remove=True)
 
     def is_selinux_system(self):
         return False
@@ -320,3 +329,23 @@ class illumosOSUtil(DefaultOSUtil):
 
     def device_for_ide_port(self, port_id):
         logger.warn('"device_for_ide_port" not supported.')
+
+    def get_instance_id(self):
+        cmd = 'smbios -t 1'
+
+        err, output = shellutil.run_get_output(cmd, chk_err=False)
+        if err:
+            return ""
+
+        for line in output.split('\n'):
+            if not line.strip().startswith('UUID:'): continue
+            return line.split(' ')[1]
+
+        return ""
+
+    def get_firewall_will_wait(self):
+        return ""
+
+    def get_firewall_dropped_packets(self, dst_ip=None):
+        return -1
+
